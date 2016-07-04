@@ -1,0 +1,65 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<% var stage;%>
+<div class="left-half" style="width:30%">
+	<h3>List of Available Contracts</h3>
+	<% contract_list.forEach(function(contract){%>
+		<table border="1px solid grey" style="width:90%" >
+			<%if(contract.seller.length>0){%> <tr><td>Seller</td><td><%=contract.seller%></td></tr><%}%>
+			<%if(contract.buyer.length>0){%> <tr><td>Buyer</td><td><%=contract.buyer%></td></tr> <%}%>
+			<tr><td>Goods</td><td><%=contract.goods%></td></tr>
+			<tr><td>Quantity</td><td><%=contract.quantity%></td></tr>
+			<tr><td>Price</td><td><%=contract.price%></td></tr>
+			<tr><td>Strike Date</td><td><% var date = new Date(contract.date+contract.strike*1000); %> <%=date%></td></tr>
+			<tr><td>Status</td><td><%=contract.status%></td></tr>
+		</table>
+		<form action="/futures/apply?id=<%=contract.id%>" method="POST" accept-charset="utf-8">
+			<input type="submit" value="<%if(contract.status=='Open'){%>Apply<%}else{%>Update<%}%> this contract" />
+		</form>
+	<%});%>
+</div>
+<div class="left-half" style="width:30%">
+	<h3>Submit Contract</h3><br>
+	<h4>To Sell Goods</h4>
+	<% var wid = '90px';%>
+	<form action="/futures/sellgoods" method="POST" accept-charset="utf-8">
+		<span style="width:<%=wid%>; display: inline-block;">Seller</span>: <input type="text" name="seller" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Goods</span>: <input type="text" name="goods" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Goods Token</span>: <input type="text" name="goods_token" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Quantity</span>: <input type="number" name="quantity" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Price</span>: <input type="number" name="price" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Strike Date</span>: <input type="number" name="strike" min="30" max="600" required="true"></br>
+		<input type="submit" value="Submit" />
+	</form>
+	<h4>To Buy Goods</h4>
+	<form action="/futures/buygoods" method="POST" accept-charset="utf-8">
+		<span style="width:<%=wid%>; display: inline-block;">Buyer</span>: <input type="text" name="buyer" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Goods</span>: <input type="text" name="goods" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Goods Token</span>: <input type="text" name="goods_token" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Quantity</span>: <input type="text" name="quantity" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Price</span>: <input type="text" name="price" required="true"></br>
+		<span style="width:<%=wid%>; display: inline-block;">Strike Date</span>: <input type="number" name="strike" min="30" max="600" required="true"></br>
+		<input type="submit" value="Submit" />
+	</form>
+	<%if(replyMsg){%> <%=replyMsg%> <%}%>
+</div>
+<div class="right-half" style="width:30%">
+	<h3>List of Closed Contracts</h3>
+	<% closed_contract_list.forEach(function(contract){%>
+		<table border="1px solid grey" style="width:90%" >
+			<%if(contract.seller.length>0){%> <tr><td>Seller</td><td><%=contract.seller%></td></tr><%}%>
+			<%if(contract.buyer.length>0){%> <tr><td>Buyer</td><td><%=contract.buyer%></td></tr> <%}%>
+			<tr><td>Goods</td><td><%=contract.goods%></td></tr>
+			<tr><td>Quantity</td><td><%=contract.quantity%></td></tr>
+			<tr><td>Price</td><td><%=contract.price%></td></tr>
+			<tr><td>Strike Date</td><td><% var date = new Date(contract.date+contract.strike*1000); %> <%=date%></td></tr>
+			<tr><td>Status</td><td><%=contract.status%></td></tr>
+		</table>
+		<form action="/futures/apply?id=<%=contract.id%>" method="POST" accept-charset="utf-8">
+			<input type="submit" value="View detail" />
+		</form>
+	<%});%>
+</div>

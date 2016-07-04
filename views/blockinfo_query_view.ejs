@@ -1,0 +1,34 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<form action="/blockinfo/query" method="POST" accept-charset="utf-8">
+	<div>
+	Query Block by : <select name="query_type">
+		<option value="Hash">Hash</option>
+		<option value="Confirmations">Confirmations</option>
+		<option value="Height">Height</option>
+		<option value="Difficulty">Difficulty</option>
+		<option value="Previous Block Hash">Previous_Block_Hash</option>
+	</select>
+	with Value : <input type="text" name="query_value" />
+	</div>
+	<input type="submit" value="Confirm Query" />
+</form><br>
+<%if(msg){%><%=msg%><br><%}%>
+<hr>
+<h3>Query Results</h3></br>
+<% blockinfos.forEach(function(blockinfo){ %>
+	<table border="2px solid black" style="width:65%" border-spacing="3px">
+	<tr><td>Hash </td><td align="center"><%= blockinfo.hash %></td></tr>
+	<tr><td>Confirmations</td><td align="center"><%= blockinfo.confirmations %></td></tr>
+	<tr><td>Height</td><td align="center"><%= blockinfo.height %></td></tr>
+	<tr><td>Difficulty</td><td align="center"><%= blockinfo.difficulty%></td></tr>
+	<tr><td>Previous Block Hash</td><td align="center"><%= blockinfo.previousblockhash%></td></tr>
+	<tr><td>List of transactions</td><td align="center"><%blockinfo.tx.forEach(function(tx){%>
+			<a href='/tx/query?hash=<%= tx%>'><%= tx%></a></br>
+			<%})%></td></tr>
+	</table>
+	</br>
+<% });%>

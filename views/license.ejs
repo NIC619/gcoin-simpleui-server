@@ -1,0 +1,232 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<script LANGUAGE="JavaScript">
+	function a2hex(str) {
+	  	var arr = [];
+	  	for (var i = 0, l = str.length; i < l; i ++) {
+	    	var hex = Number(str.charCodeAt(i)).toString(16);
+	    	arr.push(hex.length > 1 && hex || "0" + hex);
+	 	}
+	  	return arr.join('');
+	}
+
+function gcoin_Encode() {
+
+  raw_version = document.Encode_FORM.version.value;
+  raw_name = document.Encode_FORM.color_name.value;
+  raw_discrip = document.Encode_FORM.color_description.value;
+  raw_issuer = document.Encode_FORM.color_issuer.value;
+  raw_div = document.Encode_FORM.color_divisibility.value;
+  raw_feeType = document.Encode_FORM.color_fee_type.value;
+  //raw_feeRate = document.Encode_FORM.color_fee_rate.value;
+  raw_feeCollector = document.Encode_FORM.color_fee_collector.value;
+  //raw_limit = document.Encode_FORM.color_upper_limit.value;
+  raw_schedule = document.Encode_FORM.color_mint_schedule.value;
+  raw_memberControl = document.Encode_FORM.color_member_control.value;
+  raw_link = document.Encode_FORM.color_metadata_link.value;
+  //raw_meta = document.Encode_FORM.color_metadata_hash.value;
+  
+  var result = '';
+
+  // hardcode the init value
+  result = result.concat("72")
+
+  // hardcode the "version"
+  result = result.concat("110100");
+
+  // add the length of the name
+  len = raw_name.length.toString(16);
+  if(len.length == 1)
+    result = result.concat("0" + len);
+    else if(len.length == 2)
+        result = result.concat(len);
+
+  // add the "Name"
+  result = result.concat(a2hex(raw_name))
+
+  // add the length of the description
+  len = raw_discrip.length.toString(16);
+  if(len.length == 1)
+    result = result.concat("0" + len);
+    else if(len.length == 2)
+        result = result.concat(len);
+
+  // add the "Discription"
+  result = result.concat(a2hex(raw_discrip));
+
+  // add the issuer address
+  // hardcode a " mark
+  result = result.concat(a2hex("\"" + raw_issuer));
+
+  // add the divisibility
+  result = result.concat(raw_div);
+
+  // add the fee_type
+  result = result.concat(raw_feeType);
+
+  // TODO: fee rate, now hardcoded
+  result = result.concat("0000000000000000000000");
+
+  // add the fee collector address
+  // hardcode a " mark
+  result = result.concat(a2hex("\"" + raw_feeCollector));
+
+  // TODO: limit, now hardcoded
+  result = result.concat("0000000000000000");
+
+  // add the mint schedule
+  result = result.concat(raw_schedule);
+
+  // TO BE CHECK: skip 6 length 
+  result = result.concat("000000")
+
+  // add the member control 
+  result = result.concat(raw_memberControl);
+
+  // add the length of the metadata link
+  len = raw_link.length.toString(16);
+  if(len.length == 1)
+    result = result.concat("0" + len);
+    else if(len.length == 2)
+        result = result.concat(len);
+
+  // add the metadata link 
+  result = result.concat(a2hex(raw_link));
+
+  // TODO: add the metadata hash, now hardcoded
+  result = result.concat("0000000000000000000000000000000000000000000000000000000000000000")
+
+  document.Encode_FORM.Encode_result.value = result;
+
+}
+</script>
+
+<div class="left-half">
+	<div id="Div1">
+		<h3 align="left">License Info Encoder(to hex value)</h3>
+		<form NAME="Encode_FORM">
+			  <table BORDER="1">
+			  	<tr>
+			      <td>Version:</td>
+			      <td><input TYPE="text" NAME="version" SIZE="50" VALUE="1"></td>
+			    </tr>
+
+			    <tr>
+			      <td>Name:</td>
+			      <td><input TYPE="text" NAME="color_name" SIZE="50"></td>
+			    </tr>
+
+			    <tr>
+			      <td>Description:</td>
+			      <td><input TYPE="text" NAME="color_description" SIZE="50"></td>
+			    </tr>
+
+			    <tr>
+			      <td>Issuer(address):</td>
+			      <td><input TYPE="text" NAME="color_issuer" SIZE="50"></td>
+			    </tr>
+
+			    <tr>
+			      <td>Divisibility:</td>
+			      <td>
+			      <select NAME="color_divisibility">
+			          <option value="01">true</option>
+			          <option value="00">false</option>
+			      </select>
+			      </td>
+
+			    <tr>
+			      <td>fee_type:</td>
+			      <td>
+			      <select NAME="color_fee_type">
+			          <option value="00">fixed</option>
+			          <option value="01">by size</option>
+			          <option value="02">by amount</option>
+			      </select>
+			      </td>
+			    </tr>
+
+			    <tr>
+			      <td>fee_rate:</td>
+			      <td>0.0</td>
+			    </tr>
+
+			    <tr>
+			      <td>upper_limit:</td>
+			      <td>0</td>   
+			    </tr>
+
+			    <tr>
+			      <td>fee_collector(address):</td>
+			      <td><input TYPE="text" NAME="color_fee_collector" SIZE="50"></td>
+			    </tr>
+
+			    <tr>
+			      <td>mint_schedule:</td>
+			      <td>
+			      <select NAME="color_mint_schedule">
+			          <option value="00">free</option>
+			          <option value="01">once</option>
+			          <option value="02">linear</option>
+			          <option value="03">half life</option>>
+			      </select>
+			      </td>
+			    </tr>
+
+			    <tr>
+			      <td>member_control:</td>
+			      <td>
+			      <select NAME="color_member_control">
+			          <option value="01">false</option>
+			          <option value="00">true</option>
+			      </select>
+			      </td>
+			    </tr>
+
+			    <tr>
+			      <td>metadata_link:</td>
+			      <td><input TYPE="text" NAME="color_metadata_link" SIZE="50"></td>
+			    </tr>
+
+			    <tr>
+			      <td>metadata_hash:</td>
+			      <!-- <td><input TYPE="text" NAME="color_metadata_hash" SIZE="50" value="hash"></td> -->
+			      <td>hash</td>
+			    </tr>
+
+			    <tr>
+			      <td>&nbsp;</td>
+			      <td><input TYPE="button" VALUE=" Encode " onClick="gcoin_Encode();"> <input TYPE="reset" VALUE=" Reset Values "><br>
+			      <input TYPE="text" NAME="Encode_result" SIZE="50"> </td>
+			    </tr>
+			  </table>
+		</form>
+	</div>
+</div>
+<div class="right-half">
+	<form action="/license" method="POST" accept-charset="utf-8">
+		<input type="submit" value="New Address" />
+	</form>
+	<%= new_address%>
+	<h3>List of Addresses</h3>
+	<table border="2px solid black" style="width:30%" >
+		<% addresslist.forEach(function(address){%>
+		<tr><td align="center"><%= address%></td></tr>
+		<%})%>
+	</table>
+	<div>
+		<form action="/license/getlicense" method="POST" accept-charset="utf-8">
+		</br>
+		<hr>
+		<h3>Apply for a license</h3></br>
+		<span style="width:150px; display: inline-block;">Your address</span>: <input type="text" name="license_address"></br>
+		<span style="width:150px; display: inline-block;">Color of license</span>: <input type="text" name="license_color"></br>
+		<span style="width:150px; display: inline-block;">License info in hex value</span>: <input type="text" name="license_info">
+		<input type="submit" value="Get License" />
+		</form>
+		<%if(licenseinfo){%> <%=licenseinfo%> <%}%>
+	</div>
+</div>

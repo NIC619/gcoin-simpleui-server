@@ -1,0 +1,40 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+
+<div class="left-half">
+	<form action="/tx" method="POST" accept-charset="utf-8">
+	<input type="submit" value="New Address" />
+	</form>
+	<%= new_address%>
+	<h3>List of Addresses</h3>
+	<table border="2px solid black" style="width:30%" >
+	<% addresslist.forEach(function(address){%>
+	<tr><td align="center"><%= address%></td></tr>
+	<%})%>
+	</table>
+</div>
+<div class="right-half">
+	<div>
+		<form action="/tx/getfee" method="POST" accept-charset="utf-8">
+		Make sure you have a color 1 coin as transaction fee before you conduct a transaction!</br>
+		Send me a color 1 to address : <input type="text" name="feeaddress" required="true">
+		<input type="submit" value="Get Color 1" />
+		</form>
+	</div>
+	<h3>Conducting Transaction</h3>
+	<form action="/tx/conduct" method="POST" accept-charset="utf-8">
+		<span style="width:120px; display: inline-block;">Destination Address</span>: <input type="text" name="txaddress" required="true"></br>
+		<span style="width:120px; display: inline-block;">Color</span>: <input type="text" name="color" required="true"></br>
+		<span style="width:120px; display: inline-block;">Amount</span>: <input type="text" name="amount" required="true"></br>
+	<input type="submit" value="Conduct" />
+	</form></br>
+	<%if(replyMsg){%> <%=replyMsg%> <%}%>
+	<h3>Mint with your license</h3>
+	<form action="/tx/mint" method="POST" accept-charset="utf-8">
+		<span style="width:120px; display: inline-block;">License Color</span>: <input type="text" name="color" required="true"></br>
+		<span style="width:120px; display: inline-block;">Amount</span>: <input type="text" name="amount" required="true"></br>
+	<input type="submit" value="Mint" />
+</div>

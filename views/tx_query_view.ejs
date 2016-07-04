@@ -1,0 +1,33 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<form action="/tx/query" method="POST" accept-charset="utf-8">
+	<div>
+	Hash Value : <input type="text" name="query_value" />
+	</div>
+	<input type="submit" value="Confirm Query" />
+</form>
+<hr>
+<h3>Query Results</h3></br>
+	<table border="2px solid black" style="width:65%" border-spacing="3px">
+	<% if(tx_query_result){%>
+	<tr><td>Block Hash</td><td align="center"><a href='/blockinfo/query?hash=<%= tx_query_result.blockhash%>'><%= tx_query_result.blockhash%></a></td></tr>
+	<tr><td>Transaction Hash </td><td align="center"><%= tx_query_result.txid %></td></tr>
+	<tr><td>Confirmations</td><td align="center"><%= tx_query_result.confirmations %></td></tr>
+	<tr><td align="center" colspan="2">Transaction Detail</td></tr>
+	<tr><td align="center" colspan="2"><% tx_query_result.vin.forEach(function(tx){%>
+			From Transaction : <%if(tx.txid){%> <a href='/tx/query?hash=<%= tx.txid%>'><%= tx.txid%></a></br> <%}else{%> None</br><%}%>
+			With Index : <%if(tx.vout){%> <%= tx.vout%></br> <%}else{%> None</br> <%}%>
+			<%});%></td></tr>
+	<tr><td align="center" colspan="2"><% tx_query_result.vout.forEach(function(tx){%>
+			To Address : <% if(tx.scriptPubKey.addresses){%> <%=tx.scriptPubKey.addresses[0]%>   <% if (tx.scriptPubKey.addresses.length>1){%>...<%}%> <%}else{%>
+			None <%}%> </br>
+			With Color : <%= tx.color%> And Amount : <%= (tx.value/100000000)%></br>
+			Transaction Type : <%= tx.scriptPubKey.type%></br>
+			Number of Signatures required : <%if(tx.scriptPubKey.reqSigs){%> <%= tx.scriptPubKey.reqSigs%></br> <%}else{%> None <%}%></br>
+			<%});%></td></tr>
+	</table>
+	</br>
+	<%}%>

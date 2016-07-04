@@ -1,0 +1,23 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<h3>Walletinfos</h3></br>
+<table border="2px solid black" style="width:65%">
+<tr><th>Color</th><th>Amount</th></tr>
+<% for(walletinfo in walletinfos){ %>
+<tr><td align="center"><%= walletinfo%></td><td align="center"><%= walletinfos[walletinfo] %></td></tr>
+<% };%>
+</table></br>
+<h3>List of Related Transactions</h3></br>
+<% addresslist.forEach(function(address){%>
+<table border="2px solid black" style="width:65%">
+<tr><td>Address</td><td align="center"><%= address.address%></td></tr>
+<tr><td>Received Amount</td><td align="center"><%= address.amount%></td></tr>
+<tr><td>Related Transactions</td><td align="center"><%address.txids.forEach(function(tx){%>
+	<a href='/tx/query?hash=<%= tx%>'><%= tx%></a></br>
+	<%});%>
+	</td></tr>
+</table>
+<%})%>

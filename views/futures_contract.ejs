@@ -1,0 +1,57 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+
+<div class="left-half" style="width:45%">
+	<h3>Contract Detail</h3>
+	<% contract_list.forEach(function(contract){%>
+		<table border="2px solid grey" style="width:90%" >
+			<tr><td>Contract ID</td><td><%=contract.id%></td></tr>
+			<tr><td>Seller</td><td><%if(contract.seller.length>0){%><%=contract.seller%><%}else{%>None<%}%></td></tr>
+			<tr><td>Buyer</td><td><%if(contract.buyer.length>0){%><%=contract.buyer%><%}else{%>None<%}%></td></tr>
+			<tr><td>Goods</td><td><%=contract.goods%></td></tr>
+			<tr><td>Goods Token</td><td><%=contract.goods_token%></td></tr>
+			<tr><td>Quantity</td><td><%=contract.quantity%></td></tr>
+			<tr><td>Price</td><td><%=contract.price%></td></tr>
+			<tr><td>Strike Date</td><td><% var date = new Date(contract.date+contract.strike*1000); %> <%=date%></td></tr>
+			<tr><td>Status</td><td><%=contract.status%></td></tr>
+			<%if(contract.payment_id){%><tr><td>Payment Provement</td><td><%=contract.payment_id%></td></tr><%}%>
+			<%if(contract.delivery_id){%><tr><td>Delivery Provement</td><td><%=contract.delivery_id%></td></tr><%}%>
+		</table>
+	<%});%>
+</div>
+<div class="left-half" style="width:40%">
+	<h3>Update Contract</h3><br>
+	<% var stage;%>
+	<% contract_list.forEach(function(contract){%>
+	<%if(contract.status=='Open'){%>
+		<h4>Accept Contract</h4>
+		<%if(contract.seller.length>0){stage=0;}else{stage=1;}%>
+		<form action="/futures/update?id=<%=contract.id%>&stage=<%=stage%>" method="POST" accept-charset="utf-8">
+			<span style="width:165px; display: inline-block;">Address to receive contract</span>: <input type="text" name="address"></br>
+			<input type="submit" value="Accept" />
+		</form>
+	<%}else if(contract.status=='Negotiating'){stage=2%>
+		<h4>Payment Provement</h4>
+		<form action="/futures/update?id=<%=contract.id%>&stage=<%=stage%>" method="POST" accept-charset="utf-8">
+			<span style="width:165px; display: inline-block;">TransactionID for provement</span>: <input type="text" name="txid"></br>
+			<input type="submit" value="Submit" />
+		</form>
+	<%}else if(contract.status=='Paid'){stage=3%>
+		<h4>Delivery Provement</h4>
+		<form action="/futures/update?id=<%=contract.id%>&stage=<%=stage%>" method="POST" accept-charset="utf-8">
+			<span style="width:165px; display: inline-block;">TransactionID for provement</span>: <input type="text" name="txid"></br>
+			<input type="submit" value="Submit" />
+		</form>
+	<%}else if(contract.status=='Delivered'){%>
+		<h4>The Deal is closed!</h4>
+	<%}else if(contract.status=='Expired'){%>
+		<h4>The Contract is expired!</h4>
+	<%}else{%>
+		<h4>The Contract is violated!</h4>
+	<%}%>
+	<%});%>
+	<%=replyMsg%>
+</div>

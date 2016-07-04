@@ -1,0 +1,15 @@
+<% layout('layout') -%>
+<hr>
+<h1><%= title %></h1>
+    <p>Hi! You are in <%= page_title%> page</p>
+<hr>
+<form action="/command" method="POST" accept-charset="utf-8">
+	<div>
+	Input Command : <input type="text" name="command_value" />
+	</div>
+	<input type="submit" value="Confirm Command" />
+</form>
+<hr>
+	<p>
+	<%= command_output%>
+	</p>
